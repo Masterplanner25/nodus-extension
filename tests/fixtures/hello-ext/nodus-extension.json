@@ -1,0 +1,28 @@
+{
+  "name": "test.hello",
+  "version": "1.0.0",
+  "description": "Test extension that greets people",
+  "abi_version": "1",
+  "min_nodus_version": "4.0.0",
+  "capabilities": ["tool.invoke"],
+  "provenance": {
+    "origin": "local",
+    "trust_class": "dev",
+    "owner_class": "personal"
+  },
+  "surfaces": {
+    "tools": [
+      {
+        "name": "test.hello.greet",
+        "description": "Greet a person by name",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string", "description": "Name to greet"}
+          },
+          "required": ["name"]
+        }
+      }
+    ]
+  }
+}

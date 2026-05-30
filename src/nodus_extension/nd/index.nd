@@ -1,0 +1,22 @@
+// nodus-extension v0.1.0 — typed, versioned, sandboxed extension framework for Nodus
+//
+// Usage: call attach_to_runtime(runtime, registry) from Python before running scripts
+// that import this module. The _ext_* host functions are registered by attach_to_runtime.
+
+let _version = "0.1.0"
+
+fn ext_load(path) {
+  return _ext_load(path)
+}
+
+fn ext_list() {
+  return _ext_list()
+}
+
+fn ext_invoke(nm, tool, args) {
+  return _ext_invoke(nm, tool, args)
+}
+
+fn ext_describe(nm) {
+  return _ext_describe(nm)
+}
