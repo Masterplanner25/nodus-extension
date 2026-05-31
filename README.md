@@ -66,3 +66,104 @@ run_loop()
 
 v0.1.0 — PREPARED, NOT RELEASED. v0.1 ships subprocess sandbox (insecure-dev tier).
 OCI container and VM tiers are v0.2+.
+
+---
+
+## Install
+
+```bash
+pip install nodus-extension
+```
+
+Requires `nodus-lang>=4.0.0` and `pydantic>=2.0`.
+
+---
+
+## ExtensionRegistry
+
+```python
+from nodus_extension import ExtensionRegistry
+
+registry = ExtensionRegistry()
+registry.load("/path/to/my-extension")   # reads nodus-extension.json
+registry.load("/path/to/another-ext")
+
+ext = registry.get("myapp.my-extension")   # ExtensionHost | None
+all_exts = registry.list_all()             # list[ExtensionHost]
+registry.unload("myapp.my-extension")
+```
+
+---
+
+## ExtensionHost
+
+```python
+host = registry.get("myapp.my-extension")
+
+host.name           # "myapp.my-extension"
+host.manifest       # ExtensionManifest
+host.gate           # CapabilityGate
+
+result = host.invoke("myapp.greet", '{"name": "Alice"}')
+# result is the JSON-decoded return value from the extension
+```
+
+`invoke` takes args as a JSON string — not a dict. The extension runs in
+a subprocess; the args are serialized over NDJSON IPC.
+
+---
+
+## Capabilities
+
+```python
+from nodus_extension import Capability, CapabilityGate
+
+gate = CapabilityGate({"tool.invoke", "memory.read"})
+gate.has(Capability.TOOL_INVOKE)    # True
+gate.require(Capability.NETWORK_OUTBOUND)  # raises CapabilityError
+```
+
+---
+
+## Provenance
+
+```python
+from nodus_extension import Provenance, Origin, TrustClass, OwnerClass
+
+prov = Provenance(
+    origin=Origin.LOCAL,
+    trust_class=TrustClass.DEV,
+    owner_class=OwnerClass.PERSONAL,
+)
+```
+
+---
+
+## Error types
+
+| Error | When raised |
+|---|---|
+| `ManifestError` | Invalid or missing `nodus-extension.json` |
+| `CapabilityError` | Extension attempts an undeclared capability |
+| `SandboxError` | Subprocess failed to start or exited unexpectedly |
+| `AbiError` | `abi_version` mismatch |
+| `RegistryError` | Duplicate or unknown extension name |
+| `InvokeError` | Extension returned an error response |
+| `TimeoutError` | Invocation exceeded per-invoke timeout |
+
+---
+
+## Development
+
+```bash
+pip install -e ".[dev]"
+PYTHONPATH=src pytest tests/ -q
+```
+
+---
+
+## Known limitations (v0.1)
+
+- **Subprocess sandbox only.** OCI container and VM isolation tiers are v0.2+.
+- `ext_invoke` args are a **JSON string**, not a Nodus map.
+- Extensions must declare `"tool.invoke"` capability to register tools.

@@ -12,6 +12,9 @@ from nodus_extension.provenance import Origin, OwnerClass, Provenance, TrustClas
 
 _SUPPORTED_ABI_VERSIONS = {"1"}
 _DOTTED_RE = re.compile(r"^[a-z0-9_]+(\.[a-z0-9_]+)+$")
+_VALID_EFFECTS = frozenset({
+    "pure", "reads_state", "writes_state", "network", "filesystem", "spawns_task",
+})
 
 
 class ProvenanceModel(BaseModel):
@@ -59,6 +62,8 @@ class ToolSurface(BaseModel):
     description: str
     schema_: dict[str, Any] = Field(default_factory=dict, alias="schema")
     version: str = "v1alpha1"
+    returns_schema: dict[str, Any] = Field(default_factory=dict)
+    effects: list[str] = Field(default_factory=lambda: ["pure"])
 
     model_config = {"populate_by_name": True}
 
@@ -85,12 +90,27 @@ class ToolSurface(BaseModel):
             raise ValueError("tool surface description must not be empty")
         return v
 
+    @field_validator("effects")
+    @classmethod
+    def _check_effects(cls, v: list[str]) -> list[str]:
+        if not v:
+            return ["pure"]
+        for e in v:
+            if e not in _VALID_EFFECTS:
+                allowed = ", ".join(sorted(_VALID_EFFECTS))
+                raise ValueError(f"unknown effect {e!r} (allowed: {allowed})")
+        if "pure" in v and len(v) > 1:
+            raise ValueError("'pure' cannot be combined with other effects")
+        return v
+
     def as_dict(self) -> dict:
         return {
             "name": self.name,
             "description": self.description,
             "schema": self.schema_,
             "version": self.version,
+            "returns_schema": self.returns_schema,
+            "effects": self.effects,
         }
 
 

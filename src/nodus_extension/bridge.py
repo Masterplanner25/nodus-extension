@@ -31,6 +31,8 @@ def register_extension_tools(runtime: Any, host: "ExtensionHost") -> None:
             "description": surface.description,
             "schema": surface.schema_ or {},
             "version": surface.version,
+            "returns_schema": surface.returns_schema,
+            "effects": surface.effects,
             "metadata": {
                 "extension_name": manifest.name,
                 "extension_version": manifest.version,
