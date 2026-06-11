@@ -64,7 +64,7 @@ run_loop()
 
 ## Status
 
-v0.1.0 — PREPARED, NOT RELEASED. v0.1 ships subprocess sandbox (insecure-dev tier).
+v0.1.0 — published on [PyPI](https://pypi.org/project/nodus-extension/). v0.1 ships subprocess sandbox (insecure-dev tier).
 OCI container and VM tiers are v0.2+.
 
 ---
