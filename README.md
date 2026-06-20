@@ -1,5 +1,7 @@
 # nodus-extension
 
+> **Status:** v0.1.0 — published on [PyPI](https://pypi.org/project/nodus-extension/).
+
 Typed, versioned, sandboxed extension framework for Nodus agents.
 
 Allows platform operators to let third-party developers extend a Nodus application
