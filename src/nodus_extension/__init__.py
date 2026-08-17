@@ -17,7 +17,7 @@ from nodus_extension.nodus_bindings import attach_to_runtime
 from nodus_extension.provenance import Origin, OwnerClass, Provenance, TrustClass
 from nodus_extension.registry import ExtensionRegistry
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     # Core
