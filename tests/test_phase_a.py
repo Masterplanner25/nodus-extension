@@ -11,7 +11,13 @@ class TestPackageImports:
 
     def test_version_string(self):
         import nodus_extension
-        assert nodus_extension.__version__ == "0.1.0"
+        # Compared against the packaging metadata, not a literal: a hardcoded
+        # version here goes stale the moment the package is bumped. It did —
+        # the 0.1.0 -> 0.1.1 bump for the nodus-lang cap float broke these
+        # without anything in the package changing.
+        from importlib.metadata import version as _pkg_version
+
+        assert nodus_extension.__version__ == _pkg_version("nodus-extension")
 
     def test_all_exports_importable(self):
         import nodus_extension
