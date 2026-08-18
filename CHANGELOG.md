@@ -5,6 +5,22 @@ Versioning: [Semantic Versioning](https://semver.org)
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-08-17
+
+### Fixed
+
+- **Two tests asserted a hardcoded `"0.1.0"` version** and failed the moment 0.1.1
+  shipped, without anything in the package changing. They now compare
+  `__version__` against the packaging metadata, so a bump cannot make them stale.
+
+  The published 0.1.1 sdist carries the failing versions, which is the only reason
+  this is a release rather than a commit: anyone running the packaged tests sees
+  two failures that say nothing about the package.
+
+  Found by the nodus-lang v5.0.4 Stage 6 sweep, which hashes published artifacts
+  against local source and flagged the two files as drift.
+
+
 ## [0.1.1] — 2026-08-17
 
 ### Changed

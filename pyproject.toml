@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nodus-extension"
-version = "0.1.1"
+version = "0.1.2"
 description = "Typed, versioned, sandboxed extension framework for Nodus agents"
 authors = [{ name = "Shawn Knight" }]
 license = { file = "LICENSE" }
