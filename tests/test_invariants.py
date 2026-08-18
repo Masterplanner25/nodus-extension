@@ -81,7 +81,13 @@ class TestHostFunctionsDontShadowBuiltins:
 class TestPackageImportsCleanly:
     def test_import_without_subprocess_or_nodus(self):
         import nodus_extension
-        assert nodus_extension.__version__ == "0.1.0"
+        # Compared against the packaging metadata, not a literal: a hardcoded
+        # version here goes stale the moment the package is bumped. It did —
+        # the 0.1.0 -> 0.1.1 bump for the nodus-lang cap float broke these
+        # without anything in the package changing.
+        from importlib.metadata import version as _pkg_version
+
+        assert nodus_extension.__version__ == _pkg_version("nodus-extension")
 
     def test_version_is_semver(self):
         import nodus_extension
